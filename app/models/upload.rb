@@ -16,4 +16,8 @@ class Upload < ApplicationRecord
   def name
     super.presence || created_at&.iso8601
   end
+
+  def analyzed?
+    files.all?(&:analyzed?)
+  end
 end

@@ -5,8 +5,11 @@ require 'nokogiri'
 # Extract MarcRecord instances from an upload
 class ExtractMarcRecordMetadataJob < ApplicationJob
   queue_as :default
+  retry_on Exceptions::UploadNotAnalzyed, attempts: 10, wait: :exponentially_longer
 
   def perform(upload)
+    raise Exceptions::UploadNotAnalzyed unless upload.analyzed?
+
     upload.with_lock do
       upload.marc_records.delete_all
 
