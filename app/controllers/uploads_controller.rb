@@ -5,7 +5,8 @@ class UploadsController < ApplicationController
   load_and_authorize_resource :organization
   before_action :load_stream
   authorize_resource :stream
-  load_and_authorize_resource through: :stream
+  before_action :load_upload
+  authorize_resource through: :stream
   protect_from_forgery with: :null_session, if: :jwt_token
 
   # GET /uploads
@@ -62,12 +63,29 @@ class UploadsController < ApplicationController
 
   private
 
+  def load_upload
+    @upload = @stream.uploads.find_or_create_by(slug: params[:id]) do |upload|
+      upload.name = params[:id]
+    end
+  end
+
   def load_stream
     @stream = @organization.default_stream
   end
 
   # Only allow a list of trusted parameters through.
   def upload_params
-    params.require(:upload).permit(:name, :stream_id, files: [])
+    if request.form_data?
+      params.require(:upload).permit(:name, :stream_id, files: [])
+    elsif request.put?
+      {
+        name: params[:id],
+        files: [{
+          io: request.body_stream,
+          filename: params[:id],
+          content_type: request.content_type
+        }]
+      }
+    end
   end
 end
