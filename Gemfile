@@ -94,6 +94,8 @@ gem 'rack-attack'
 gem 'chartkick'
 gem 'groupdate'
 
+gem 'graphql'
+
 group :deployment do
   gem 'capistrano', '~> 3.0'
   gem 'capistrano-bundler'
@@ -102,3 +104,5 @@ group :deployment do
   gem 'capistrano-shared_configs'
   gem 'dlss-capistrano'
 end
+
+gem 'graphiql-rails'

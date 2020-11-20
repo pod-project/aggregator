@@ -190,6 +190,10 @@ GEM
       activerecord (>= 4.0.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    graphiql-rails (1.7.0)
+      railties
+      sprockets-rails
+    graphql (1.11.6)
     groupdate (5.2.1)
       activesupport (>= 5)
     hashdiff (1.0.1)
@@ -459,6 +463,8 @@ DEPENDENCIES
   dlss-capistrano
   factory_bot_rails
   friendly_id
+  graphiql-rails
+  graphql
   groupdate
   honeybadger
   http
