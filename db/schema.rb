@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_20_154520) do
+ActiveRecord::Schema.define(version: 2020_11_20_180608) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -150,8 +150,10 @@ ActiveRecord::Schema.define(version: 2020_11_20_154520) do
     t.bigint "length"
     t.bigint "index"
     t.string "checksum"
+    t.string "isbn"
     t.index ["file_id", "marc001"], name: "index_marc_records_on_file_id_and_marc001"
     t.index ["file_id"], name: "index_marc_records_on_file_id"
+    t.index ["isbn"], name: "index_marc_records_on_isbn"
     t.index ["upload_id", "marc001"], name: "index_marc_records_on_upload_id_and_marc001"
     t.index ["upload_id"], name: "index_marc_records_on_upload_id"
   end

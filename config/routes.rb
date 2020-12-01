@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get '/documentation/:id', to: 'pages#show', as: :pages
   get '/api', to: 'pages#api'
 
+  resources :lookup, only: :index
 
   get 'contact_emails/confirm/:token', to: 'contact_emails#confirm', as: :contact_email_confirmation
 

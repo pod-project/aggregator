@@ -69,12 +69,19 @@ class Upload < ApplicationRecord
         marc001: record['001']&.value,
         file_id: file.id,
         upload_id: id,
-        marc: record
+        marc: record,
+        isbn: record_isbn(record)
       )
 
       out.checksum ||= Digest::MD5.hexdigest(record.to_xml.to_s)
 
       yield out
     end
+  end
+
+  def record_isbn(record)
+    marc020 = record['020'] || {}
+
+    (marc020['a'] || marc020['z'])&.[](/^x?\d+/)
   end
 end

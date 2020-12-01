@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="d-flex justify-content-between">
+    <h1>Marc Records</h1>
+  </div>
+  <%= link_to "view as JSON", url_for(index_params.merge(format: :json)) %>
+
+  <table class="table table-striped organizations">
+    <thead>
+      <tr>
+        <th>marc001</th>
+        <th>Stream</th>
+        <th>Download</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @response.each do |organization, marc_records| %>
+        <tr>
+          <td colspan="3" class="bg-info font-weight-bold text-white"><%= organization.name %></td>
+        </tr>
+
+        <% marc_records.each do |marc_record| %>
+          <tr>
+            <td><%= marc_record.marc001 %></td>
+            <td><%= link_to(marc_record.stream.display_name, organization_stream_path(organization, marc_record.stream)) %></td>
+            <td><%= link_to('marc21', marc21_organization_marc_record_url(organization, marc_record)) %>, <%= link_to('marcxml', marcxml_organization_marc_record_url(organization, marc_record)) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
