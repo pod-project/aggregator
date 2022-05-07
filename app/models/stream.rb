@@ -19,8 +19,8 @@ class Stream < ApplicationRecord
 
   has_many_attached :snapshots
 
-  before_destroy :preserve_default_streams
   after_create :check_for_a_default_stream
+  before_destroy :preserve_default_streams
 
   # :nodoc:
   class CannotMakeStreamDefault < StandardError
