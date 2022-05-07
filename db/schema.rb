@@ -10,12 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_07_140945) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.integer "record_id", null: false
-    t.integer "blob_id", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -26,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.string "filename", null: false
     t.string "content_type"
     t.text "metadata"
-    t.integer "byte_size", null: false
+    t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
@@ -34,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
+    t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -89,7 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.string "aud"
     t.datetime "exp", precision: nil
     t.string "resource_type"
-    t.integer "resource_id"
+    t.bigint "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "label"
@@ -115,10 +118,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at", precision: nil
+    t.datetime "created_at"
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "interstream_deltas", force: :cascade do |t|
+    t.bigint "normalized_dump_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "stream_id", null: false
+    t.index ["normalized_dump_id"], name: "index_interstream_deltas_on_normalized_dump_id"
+    t.index ["stream_id"], name: "index_interstream_deltas_on_stream_id"
   end
 
   create_table "job_trackers", force: :cascade do |t|
@@ -154,9 +166,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.integer "file_id", null: false
     t.integer "upload_id", null: false
     t.string "marc001"
-    t.integer "bytecount"
-    t.integer "length"
-    t.integer "index"
+    t.bigint "bytecount"
+    t.bigint "length"
+    t.bigint "index"
     t.string "checksum"
     t.string "status"
     t.binary "json"
@@ -172,7 +184,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.datetime "last_delta_dump_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "full_dump_id"
+    t.bigint "full_dump_id"
     t.index ["full_dump_id"], name: "index_normalized_dumps_on_full_dump_id"
     t.index ["stream_id"], name: "index_normalized_dumps_on_stream_id"
   end
@@ -222,6 +234,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.string "status", default: "active"
+    t.datetime "default_start_time", precision: nil
+    t.datetime "default_end_time", precision: nil
     t.index ["organization_id"], name: "index_streams_on_organization_id"
     t.index ["slug"], name: "index_streams_on_slug", unique: true
     t.index ["status"], name: "index_streams_on_status"
@@ -277,19 +291,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_13_204319) do
   end
 
   create_table "versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", limit: 8, null: false
+    t.string "item_type"
+    t.string "{:null=>false}"
+    t.bigint "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
-    t.text "object", limit: 1073741823
+    t.text "object"
     t.datetime "created_at", precision: nil
-    t.text "object_changes", limit: 1073741823
+    t.text "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "contact_emails", "organizations"
+  add_foreign_key "interstream_deltas", "normalized_dumps"
+  add_foreign_key "interstream_deltas", "streams"
   add_foreign_key "marc_profiles", "uploads"
   add_foreign_key "normalized_dumps", "streams"
 end

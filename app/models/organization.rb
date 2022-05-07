@@ -8,7 +8,6 @@ class Organization < ApplicationRecord
   friendly_id :name, use: %i[finders slugged]
   has_paper_trail
   has_many :streams, dependent: :destroy
-  has_many :default_stream_histories, dependent: :destroy
   has_many :uploads, through: :streams
   has_many :marc_records, through: :streams, inverse_of: :organization
   has_many :allowlisted_jwts, as: :resource, dependent: :delete_all

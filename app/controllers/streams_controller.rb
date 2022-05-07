@@ -41,10 +41,14 @@ class StreamsController < ApplicationController
   end
 
   def destroy
-    @stream.destroy
+    begin
+      @stream.destroy
+    rescue Stream::CannotDestroyStream => e
+      notice = e.message
+    end
 
     respond_to do |format|
-      format.html { redirect_to organization_streams_path, notice: 'Stream was successfully destroyed.' }
+      format.html { redirect_to organization_streams_path, notice: (notice || 'Stream was successfully destroyed.') }
       format.json { head :no_content }
     end
   end
@@ -59,10 +63,14 @@ class StreamsController < ApplicationController
     @stream = @organization.streams.find(params[:stream])
     authorize!(:update, @stream)
 
-    @stream.make_default
+    begin
+      @stream.make_default
+    rescue Stream::CannotMakeStreamDefault => e
+      notice = e.message
+    end
 
     respond_to do |format|
-      format.html { redirect_to @organization, notice: 'Stream was successfully updated.' }
+      format.html { redirect_to @organization, notice: (notice || 'Stream was successfully updated.') }
       format.json { render :show, status: :ok, location: @organization }
     end
   end

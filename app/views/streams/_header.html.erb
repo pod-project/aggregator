@@ -19,7 +19,7 @@
 </p>
 
 <div class="mb-3">
-  <% unless stream.default? %>
+  <% if stream.can_make_default?  %>
     <%= link_to t('.make_default'), make_default_organization_streams_path(stream.organization, stream: stream.slug), method: :post, class: 'btn btn-secondary align-self-center' if can?(:update, stream) %>
   <% end %>
 </div>

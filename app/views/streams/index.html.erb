@@ -28,10 +28,14 @@
         <td class="align-middle text-end"><%= stream.files.size %></td>
         <td class="align-middle text-end"><%= number_to_human_size stream.files.sum(:byte_size) %></td>
         <td class="align-middle">
-          <%= link_to 'Destroy', [@organization, stream], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' if can? :destroy, stream %>
+          <% if stream.can_destroy? %>
+            <%= link_to 'Destroy', [@organization, stream], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' if can? :destroy, stream %>
+          <% end %>
         </td>
         <td class="align-middle">
-          <%= link_to 'Make default', make_default_organization_streams_path(@organization, stream: stream.slug), method: :post, class: 'btn btn-sm btn-info' if !stream.default? && can?(:update, stream) %>
+          <% if stream.can_make_default? %>
+            <%= link_to 'Make default', make_default_organization_streams_path(@organization, stream: stream.slug), method: :post, class: 'btn btn-sm btn-info' if can?(:update, stream) %>
+          <% end %>
         </td>
       </tr>
       <% end %>

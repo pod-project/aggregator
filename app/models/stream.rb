@@ -7,7 +7,6 @@ class Stream < ApplicationRecord
   friendly_id :name, use: %i[finders slugged scoped], scope: :organization
   belongs_to :organization
   has_many :uploads, dependent: :destroy
-  has_one :default_stream_history, dependent: :destroy
   has_many :marc_records, through: :uploads, inverse_of: :stream
   has_many :files, source: :files_blobs, through: :uploads
   has_one :statistic, dependent: :delete, as: :resource
@@ -20,9 +19,22 @@ class Stream < ApplicationRecord
 
   has_many_attached :snapshots
 
+  before_destroy :preserve_default_streams
   after_create :check_for_a_default_stream
 
-  before_update :update_default_stream_history, if: :default_changed?
+  # :nodoc:
+  class CannotMakeStreamDefault < StandardError
+    def message
+      'Current and former default streams cannot be made the default.'
+    end
+  end
+
+  # :nodoc:
+  class CannotDestroyStream < StandardError
+    def message
+      'Current and former default streams cannot be deleted.'
+    end
+  end
 
   def display_name
     name.presence || default_name
@@ -34,12 +46,27 @@ class Stream < ApplicationRecord
   end
 
   def make_default
-    return if default
+    raise(DefaultStreamIntegrityViolation) unless can_make_default?
 
     Stream.transaction do
-      organization.streams.default.each { |stream| stream.update(default: false) }
+      organization.streams.default.each do |stream|
+        stream.update(default: false, default_end_time: DateTime.now)
+      end
       update(default: true)
+      update(default_start_time: DateTime.now)
     end
+  end
+
+  def can_make_default?
+    default.blank? && default_start_time.blank? && default_end_time.blank?
+  end
+
+  def can_destroy?
+    default.blank? && default_start_time.blank? && default_end_time.blank?
+  end
+
+  def previous_default
+    organization.streams.order(default_end_time: :desc).where('default_end_time < ?', default_start_time).first
   end
 
   def job_tracker_status_groups
@@ -77,6 +104,10 @@ class Stream < ApplicationRecord
 
   private
 
+  def preserve_default_streams
+    raise(CannotDestroyStream) unless can_destroy? || destroyed_by_association
+  end
+
   def default_name
     "#{I18n.l(created_at.to_date)} - #{default? ? '' : I18n.l(updated_at.to_date)}"
   end
@@ -84,14 +115,6 @@ class Stream < ApplicationRecord
   def check_for_a_default_stream
     return unless organization.streams.count == 1
 
-    DefaultStreamHistory.create(organization: organization, stream: self, start_time: DateTime.now)
-  end
-
-  def update_default_stream_history
-    if default
-      DefaultStreamHistory.create(organization: organization, stream: self, start_time: DateTime.now)
-    else
-      DefaultStreamHistory.where(organization: organization, end_time: nil).update(end_time: DateTime.now)
-    end
+    update(default_start_time: DateTime.now)
   end
 end

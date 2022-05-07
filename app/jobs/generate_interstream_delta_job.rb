@@ -14,10 +14,10 @@ class GenerateInterstreamDeltaJob < ApplicationJob
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def perform(stream)
-    previous_stream_history = stream.default_stream_history.previous_stream_history
-    return if previous_stream_history.nil?
+    # TODO: Cory: Test this.
+    return if stream.previous_default.blank?
 
-    previous_stream = previous_stream_history.stream
+    previous_stream = stream.previous_default
 
     current_stream_dump = stream.current_full_dump
     previous_stream_dump = previous_stream.current_full_dump
