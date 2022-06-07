@@ -155,19 +155,10 @@ class OaiController < ApplicationController
               end
 
     # get all dumps in this stream, optionally between two dates; error if none
-    dumps = filter_dumps(streams, from_date, until_date)
+    dumps = streams.map do |stream|
+      stream.current_dumps(from_date: from_date, until_date: until_date)
+    end
     raise OaiConcern::NoRecordsMatch if dumps.empty?
-
-    dumps
-  end
-
-  def filter_dumps(streams, from_date, until_date)
-    # get candidate dumps (the current full dump and its deltas for each stream)
-    dumps = streams.flat_map(&:current_dumps).sort_by(&:created_at)
-
-    # filter candidate dumps (by from date and until date)
-    dumps = dumps.select { |dump| dump.created_at >= Time.zone.parse(from_date).beginning_of_day } if from_date.present?
-    dumps = dumps.select { |dump| dump.created_at <= Time.zone.parse(until_date).end_of_day } if until_date.present?
 
     dumps
   end

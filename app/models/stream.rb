@@ -78,9 +78,15 @@ class Stream < ApplicationRecord
                            normalized_dumps.full_dumps.create(last_delta_dump_at: Time.zone.at(0))
   end
 
-  # the current full dump and its associated deltas
-  def current_dumps
-    [current_full_dump, *current_full_dump.deltas]
+  # the current full dump and its associated deltas, optionally filtered using
+  # a start and end date range query
+  def current_dumps(from_date: nil, until_date: nil)
+    dumps = normalized_dumps.where(id: current_full_dump.id)
+                            .or(normalized_dumps.where(full_dump_id: current_full_dump.id))
+                            .order(created_at: :asc)
+    dumps = dumps.where('created_at >= ?', from_date) if from_date
+    dumps = dumps.where('created_at <= ?', until_date) if until_date
+    dumps
   end
 
   # If no datetime is provided then assume we want the previous DefaultStreamHistory

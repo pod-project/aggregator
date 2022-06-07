@@ -36,6 +36,12 @@ class MarcRecordWriterService
     @opened_files.each(&:unlink)
   end
 
+  def attach_files_to_dump(dump, base_name)
+    files.each do |file_type, file|
+      dump.public_send(file_type).attach(io: File.open(file), filename: human_readable_filename(base_name, file_type))
+    end
+  end
+
   private
 
   def write_marc21_record(record)
@@ -82,5 +88,20 @@ class MarcRecordWriterService
     return CustomMarcWriter.encode(marc) if e.message.include? "Can't write MARC record in binary format, as a length/offset"
 
     raise e
+  end
+
+  def human_readable_filename(base_name, file_type)
+    file_name = case file_type
+                when :deletes
+                  'deletes.del.txt'
+                when :marc21
+                  'marc21.mrc.gz'
+                when :marcxml
+                  'marcxml.xml.gz'
+                else
+                  "#{file_type}.gz"
+                end
+
+    "#{base_name}-#{file_name}"
   end
 end

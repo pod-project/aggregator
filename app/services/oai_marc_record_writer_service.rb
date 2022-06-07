@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
-# Utility class for serializing MARC records to files
+# Utility class for serializing MARC records to OAI-XML files
 class OaiMarcRecordWriterService
-  attr_reader :base_name
+  attr_reader :base_name, :files
 
   def initialize(base_name = nil)
     @base_name = base_name
+    @files = []
+    @records_written = 0
+    @oai_writer = OAIPMHWriter.new(Zlib::GzipWriter.new(temp_file))
   end
 
   def write_marc_record(record)
+    next_file if @records_written == Settings.oai_max_page_size
+
     oai_writer.write(record.augmented_marc, record.oai_id, record.stream.id, record.upload.created_at)
+    @records_written += 1
   rescue StandardError => e
     error = "Error writing MARC OAI file #{record.oai_id}: #{e}"
     Rails.logger.info(error)
@@ -17,7 +23,10 @@ class OaiMarcRecordWriterService
   end
 
   def write_delete(record)
+    next_file if @records_written == Settings.oai_max_page_size
+
     oai_writer.write_delete(record.oai_id, record.stream.id, record.upload.created_at)
+    @records_written += 1
   end
 
   def finalize
@@ -25,25 +34,35 @@ class OaiMarcRecordWriterService
   end
 
   def close
-    @oai_file&.close
+    @files.each(&:close)
   end
 
   def unlink
-    @oai_file&.unlink
+    @files.each(&:unlink)
   end
 
-  def oai_file
-    @oai_file ||= Tempfile.new("#{base_name}-oai_xml", binmode: true)
-  end
-
-  def bytes_written?
-    @oai_writer&.bytes_written?
+  def attach_files_to_dump(dump, base_name)
+    files.each_with_index do |file, counter|
+      dump.public_send(:oai_xml).attach(io: File.open(file), filename: human_readable_filename(base_name, counter))
+    end
   end
 
   private
 
-  def oai_writer
-    @oai_writer ||= OAIPMHWriter.new(Zlib::GzipWriter.new(oai_file))
+  def next_file
+    @oai_writer&.close
+    @oai_writer = OAIPMHWriter.new(Zlib::GzipWriter.new(temp_file))
+    @records_written = 0
+  end
+
+  def temp_file
+    Tempfile.new("#{base_name}-oai_xml", binmode: true).tap do |file|
+      @files << file
+    end
+  end
+
+  def human_readable_filename(base_name, counter = nil)
+    "#{base_name}-oai-#{format('%010d', counter)}.xml.gz"
   end
 
   # Special logic for writing OAI-PMH-style record responses
