@@ -18,7 +18,7 @@ RSpec.describe ActiveStorageBlobContentTypes do
 
       def extract_metadata_via_analyzer
         {
-          content_type: content_type
+          content_type:
         }
       end
 

@@ -21,7 +21,7 @@ RSpec.describe '/uploads' do
     { files: [fixture_file_upload(Rails.root.join('spec/fixtures/1297245.marc'), 'application/octet-stream')] }
   end
 
-  let(:valid_model_attributes) { valid_attributes.merge(stream: stream) }
+  let(:valid_model_attributes) { valid_attributes.merge(stream:) }
 
   let(:invalid_attributes) do
     skip

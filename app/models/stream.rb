@@ -87,7 +87,7 @@ class Stream < ApplicationRecord
     return if full_dump_id.blank?
 
     dumps_query = NormalizedDump.where(id: full_dump_id)
-                                .or(NormalizedDump.where(full_dump_id: full_dump_id))
+                                .or(NormalizedDump.where(full_dump_id:))
                                 .published
                                 .order(created_at: :asc)
     dumps_query = dumps_query.where('created_at >= ?', Time.zone.parse(from_date).beginning_of_day) if from_date.present?

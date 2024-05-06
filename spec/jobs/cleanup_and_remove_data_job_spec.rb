@@ -9,7 +9,7 @@ RSpec.describe CleanupAndRemoveDataJob do
     before do
       organization.default_stream
       Timecop.travel(4.months.ago)
-      create_list(:stream, 4, organization: organization)
+      create_list(:stream, 4, organization:)
       Timecop.return
     end
 
@@ -22,7 +22,7 @@ RSpec.describe CleanupAndRemoveDataJob do
     before do
       organization.default_stream
       Timecop.travel(7.months.ago)
-      create_list(:stream, 4, organization: organization, status: 'archived')
+      create_list(:stream, 4, organization:, status: 'archived')
       Timecop.return
     end
 

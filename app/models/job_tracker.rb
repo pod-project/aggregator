@@ -57,8 +57,8 @@ class JobTracker < ApplicationRecord
 
   private
 
-  def number_with_delimiter(*args)
-    ActiveSupport::NumberHelper.number_to_delimited(*args)
+  def number_with_delimiter(*)
+    ActiveSupport::NumberHelper.number_to_delimited(*)
   end
 
   def in_sidekiq_set?(set)

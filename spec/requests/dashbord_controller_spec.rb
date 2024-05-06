@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe '/dashboard' do
   let(:user) { create(:user) }
   let(:organization) { create(:organization) }
-  let(:stream) { create(:stream, organization: organization, default: true) }
+  let(:stream) { create(:stream, organization:, default: true) }
   let(:uploads) do
-    create_list(:upload, 1, :multiple_files, stream: stream)
+    create_list(:upload, 1, :multiple_files, stream:)
   end
 
   before do

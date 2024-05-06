@@ -42,7 +42,7 @@ class ExtractFilesJob < ApplicationJob
   end
 
   def each_file(attachment, limit: 1000)
-    return to_enum(:each_file, attachment, limit: limit) unless block_given?
+    return to_enum(:each_file, attachment, limit:) unless block_given?
 
     counter = 0
 

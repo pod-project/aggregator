@@ -73,7 +73,7 @@ class UploadsController < ApplicationController
       if params[:stream].present?
         slug = @organization.default_stream.normalize_friendly_id(params[:stream])
 
-        @organization.streams.find_or_create_by(slug: slug) do |stream|
+        @organization.streams.find_or_create_by(slug:) do |stream|
           stream.name = params[:stream]
         end
       else

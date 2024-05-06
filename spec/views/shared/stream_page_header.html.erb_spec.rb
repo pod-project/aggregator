@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'shared/_stream_page_header' do
   let(:organization) { create(:organization, name: 'Best University') }
-  let(:stream) { create(:stream, organization: organization) }
+  let(:stream) { create(:stream, organization:) }
 
   before do
     assign(:organization, organization)

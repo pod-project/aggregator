@@ -5,7 +5,7 @@ class MarcFixtureSeedFetcher
     new.fetch_uploads(slug, ...)
   end
 
-  def fetch_uploads(slug, &_block)
+  def fetch_uploads(slug, &)
     default_stream_url = default_stream_for(slug)['url']
     default_stream = JSON.parse(http_client.get(default_stream_url).body)
 

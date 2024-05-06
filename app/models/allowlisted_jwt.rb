@@ -12,8 +12,8 @@ class AllowlistedJwt < ApplicationRecord
 
   def jwt_attributes
     {
-      jti: jti,
-      scope: scope,
+      jti:,
+      scope:,
       iss: 'POD',
       name: label
     }.compact_blank

@@ -42,7 +42,7 @@ class Upload < ApplicationRecord
     files.find_each(&:purge_later)
   end
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Style/ArgumentsForwarding
   def read_marc_record_metadata(**options, &block)
     return to_enum(:read_marc_record_metadata, **options) unless block
 
@@ -64,7 +64,7 @@ class Upload < ApplicationRecord
       raise if e.instance_of?(ActiveStorage::FileNotFoundError)
     end
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Style/ArgumentsForwarding
 
   private
 
@@ -97,7 +97,7 @@ class Upload < ApplicationRecord
       tmpfile.each_line do |line|
         yield MarcRecord.new(
           marc001: line.strip,
-          file: file,
+          file:,
           upload: self,
           status: 'delete'
         )
@@ -106,12 +106,12 @@ class Upload < ApplicationRecord
   end
 
   def extract_marc_record_metadata(file, service, checksum: true)
-    return to_enum(:extract_marc_record_metadata, file, service, checksum: checksum) unless block_given?
+    return to_enum(:extract_marc_record_metadata, file, service, checksum:) unless block_given?
 
     service.each_with_metadata do |record, metadata|
       out = MarcRecord.new(
         **metadata,
-        file: file,
+        file:,
         marc: record,
         upload: self
       )

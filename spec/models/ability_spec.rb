@@ -52,8 +52,8 @@ RSpec.describe Ability do
   describe 'with a user' do
     let(:organization) { create(:organization) }
     let(:not_my_org) { create(:organization) }
-    let(:default_stream) { create(:stream, :default, organization: organization) }
-    let(:previous_default_stream) { create(:stream, organization: organization) }
+    let(:default_stream) { create(:stream, :default, organization:) }
+    let(:previous_default_stream) { create(:stream, organization:) }
 
     context 'with an admin' do
       let(:user) { create(:admin) }
@@ -100,14 +100,14 @@ RSpec.describe Ability do
       it { is_expected.to be_able_to(:organization_details, organization) }
       it { is_expected.to be_able_to(:provider_details, organization) }
 
-      it { is_expected.to be_able_to(:crud, Upload.new(organization: organization)) }
-      it { is_expected.to be_able_to(:info, Upload.new(organization: organization)) }
+      it { is_expected.to be_able_to(:crud, Upload.new(organization:)) }
+      it { is_expected.to be_able_to(:info, Upload.new(organization:)) }
 
-      it { is_expected.to be_able_to(:crud, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:normalized_data, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:processing_status, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:profile, Stream.new(organization: organization)) }
-      it { is_expected.not_to be_able_to(:reanalyze, Stream.new(organization: organization)) }
+      it { is_expected.to be_able_to(:crud, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:normalized_data, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:processing_status, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:profile, Stream.new(organization:)) }
+      it { is_expected.not_to be_able_to(:reanalyze, Stream.new(organization:)) }
 
       it { is_expected.to be_able_to(:crud, AllowlistedJwt.new(resource: organization)) }
 
@@ -149,17 +149,17 @@ RSpec.describe Ability do
       it { is_expected.to be_able_to(:organization_details, organization) }
       it { is_expected.to be_able_to(:provider_details, organization) }
 
-      it { is_expected.to be_able_to(:read, Upload.new(organization: organization)) }
-      it { is_expected.to be_able_to(:info, Upload.new(organization: organization)) }
-      it { is_expected.to be_able_to(:create, Upload.new(organization: organization)) }
-      it { is_expected.not_to be_able_to(:destroy, Upload.new(organization: organization)) }
+      it { is_expected.to be_able_to(:read, Upload.new(organization:)) }
+      it { is_expected.to be_able_to(:info, Upload.new(organization:)) }
+      it { is_expected.to be_able_to(:create, Upload.new(organization:)) }
+      it { is_expected.not_to be_able_to(:destroy, Upload.new(organization:)) }
 
-      it { is_expected.to be_able_to(:read, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:normalized_data, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:processing_status, Stream.new(organization: organization)) }
-      it { is_expected.to be_able_to(:profile, Stream.new(organization: organization)) }
-      it { is_expected.not_to be_able_to(:create, Stream.new(organization: organization)) }
-      it { is_expected.not_to be_able_to(:reanalyze, Stream.new(organization: organization)) }
+      it { is_expected.to be_able_to(:read, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:normalized_data, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:processing_status, Stream.new(organization:)) }
+      it { is_expected.to be_able_to(:profile, Stream.new(organization:)) }
+      it { is_expected.not_to be_able_to(:create, Stream.new(organization:)) }
+      it { is_expected.not_to be_able_to(:reanalyze, Stream.new(organization:)) }
 
       it { is_expected.to be_able_to(:read, AllowlistedJwt.new(resource: organization)) }
       it { is_expected.not_to be_able_to(:create, AllowlistedJwt.new(resource: organization)) }

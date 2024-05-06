@@ -10,17 +10,17 @@ RSpec.describe 'organizations/show' do
                                          ))
 
     # create a default stream with some uploads
-    stream = Stream.create!(name: 'stream1', organization: organization, default: true)
+    stream = Stream.create!(name: 'stream1', organization:, default: true)
 
     Upload.create!([
                      {
                        name: 'upload1',
-                       stream: stream,
+                       stream:,
                        url: 'http://example.com/upload1.zip'
                      },
                      {
                        name: 'upload2',
-                       stream: stream,
+                       stream:,
                        url: 'http://example.com/upload2.zip'
                      }
                    ])

@@ -4,15 +4,15 @@ require 'rails_helper'
 
 RSpec.describe 'Downloading normalized files from POD' do
   let(:organization) { create(:organization, code: 'best-org') }
-  let(:stream) { create(:stream, organization: organization, default: true) }
+  let(:stream) { create(:stream, organization:, default: true) }
   let(:user) { create(:user) }
 
   before do
     user.add_role :member, organization
     login_as(user, scope: :user)
 
-    create_list(:upload, 2, :binary_marc, organization: organization, stream: stream)
-    create_list(:upload, 2, :binary_marc_gz, organization: organization, stream: stream)
+    create_list(:upload, 2, :binary_marc, organization:, stream:)
+    create_list(:upload, 2, :binary_marc_gz, organization:, stream:)
   end
 
   describe 'Full dumps' do

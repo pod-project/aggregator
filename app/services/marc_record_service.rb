@@ -97,7 +97,7 @@ class MarcRecordService
     return to_enum(:each_raw_record, reader) unless block_given?
 
     reader.each_with_index do |record, index|
-      with_honeybadger_context(index: index, marc001: record['001']&.value) do
+      with_honeybadger_context(index:, marc001: record['001']&.value) do
         yield record
       end
     end
@@ -140,10 +140,10 @@ class MarcRecordService
                          else identify
                          end
 
-        from_bytes(io.read(range.size), extracted_type, merge: merge)
+        from_bytes(io.read(range.size), extracted_type, merge:)
       end
     else
-      from_bytes(download_chunk(range), merge: merge)
+      from_bytes(download_chunk(range), merge:)
     end
   end
 
@@ -186,7 +186,7 @@ class MarcRecordService
 
     return each_with_metadata_for_marc21(&block) if marc21?
 
-    each.with_index { |record, index| yield record, extract_record_metadata(record).merge(index: index) }
+    each.with_index { |record, index| yield record, extract_record_metadata(record).merge(index:) }
   end
 
   private
@@ -227,7 +227,7 @@ class MarcRecordService
 
         yield record, {
           **records_to_combine.first.except(:marc, :marc_bytes),
-          index: index,
+          index:,
           length: bytes.length,
           checksum: Digest::MD5.hexdigest(bytes)
         }
@@ -241,15 +241,15 @@ class MarcRecordService
     with_reader do |reader|
       bytecount = 0
       reader.each_raw.with_index do |bytes, index|
-        with_honeybadger_context(bytecount: bytecount, index: index) do
+        with_honeybadger_context(bytecount:, index:) do
           length = bytes[0...5].to_i
           record = MARC::Reader.decode(bytes, external_encoding: 'UTF-8', invalid: :replace)
-          with_honeybadger_context(marc001: record['001']&.value, bytecount: bytecount, index: index) do
+          with_honeybadger_context(marc001: record['001']&.value, bytecount:, index:) do
             yield(
               extract_record_metadata(record).merge(
-                bytecount: bytecount,
-                length: length,
-                index: index,
+                bytecount:,
+                length:,
+                index:,
                 checksum: Digest::MD5.hexdigest(bytes),
                 marc_bytes: bytes,
                 marc: record

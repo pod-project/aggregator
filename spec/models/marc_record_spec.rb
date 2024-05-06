@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe MarcRecord do
-  subject(:marc_record) { described_class.new(marc: record, upload: upload, **attr) }
+  subject(:marc_record) { described_class.new(marc: record, upload:, **attr) }
 
   let(:attr) { {} }
   let(:organization) { create(:organization, code: 'COOlCOdE', slug: 'ivy-u') }
-  let(:upload) { create(:upload, :binary_marc, organization: organization) }
+  let(:upload) { create(:upload, :binary_marc, organization:) }
   let(:record) do
     MARC::Record.new.tap do |record|
       record.append(MARC::ControlField.new('001', '12345'))

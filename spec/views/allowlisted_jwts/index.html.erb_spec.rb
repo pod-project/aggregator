@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'allowlisted_jwts/index' do
   let(:organization) { build(:organization) }
-  let(:stream) { create(:stream_with_uploads, organization: organization, default: true) }
+  let(:stream) { create(:stream_with_uploads, organization:, default: true) }
 
   before do
     assign(:organization, organization)

@@ -128,7 +128,7 @@ RSpec.describe '/organizations' do
         icon = fixture_file_upload(Rails.root.join('spec/fixtures/pod_logo.svg'), 'image/svg+xml')
 
         expect(organization.icon.attached?).to be false
-        patch organization_url(organization), params: { organization: new_attributes.merge(icon: icon) }
+        patch organization_url(organization), params: { organization: new_attributes.merge(icon:) }
         expect(organization.reload.icon.attached?).to be true
       end
 

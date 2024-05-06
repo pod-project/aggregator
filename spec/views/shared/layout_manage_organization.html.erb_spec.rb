@@ -7,7 +7,7 @@ RSpec.describe 'shared/_layout_manage_organization' do
   let(:organization) do
     create(:organization, name: 'Best University', provider: is_provider)
   end
-  let(:stream) { create(:stream_with_uploads, organization: organization) }
+  let(:stream) { create(:stream_with_uploads, organization:) }
   let(:user) { create(:user) }
 
   before do

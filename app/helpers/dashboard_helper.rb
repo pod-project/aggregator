@@ -36,11 +36,11 @@ module DashboardHelper
   end
 
   def any_successes?(statuses)
-    (%i[deletes success] & statuses).any?
+    %i[deletes success].intersect?(statuses)
   end
 
   def any_failures?(statuses)
-    (%i[invalid not_marc] & statuses).any?
+    %i[invalid not_marc].intersect?(statuses)
   end
 
   def count_roles(users)

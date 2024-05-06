@@ -8,7 +8,7 @@ class AttachRemoteFileToUploadJob < ApplicationJob
 
   def perform(upload)
     io = URI.parse(upload.url).open
-    upload.files.attach(io: io, filename: filename_from_io(io) || filename_from_url(upload.url) || upload.name)
+    upload.files.attach(io:, filename: filename_from_io(io) || filename_from_url(upload.url) || upload.name)
     upload.update(status: 'active')
   rescue SocketError, OpenURI::HTTPError => e
     error = "Error opening #{upload.url}: #{e}"

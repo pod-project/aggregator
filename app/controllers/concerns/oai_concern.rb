@@ -71,7 +71,7 @@ module OaiConcern
       set, page, from_date, until_date, version = Base64.urlsafe_decode64(string).split(';')
       raise BadResumptionToken unless version == ResumptionToken.version
 
-      token = ResumptionToken.new(set: set, page: page, from_date: from_date, until_date: until_date)
+      token = ResumptionToken.new(set:, page:, from_date:, until_date:)
       raise BadResumptionToken unless token.valid?
 
       token

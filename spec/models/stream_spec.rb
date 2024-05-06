@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Stream do
-  subject(:stream) { create(:stream, organization: organization) }
+  subject(:stream) { create(:stream, organization:) }
 
   let(:organization) { create(:organization) }
 
@@ -16,7 +16,7 @@ RSpec.describe Stream do
     it 'defaults to the time span' do
       # create Stream manually since factory provides display_name value
       expect(described_class.new(
-        organization: organization,
+        organization:,
         created_at: Time.zone.parse('2020-11-01'),
         updated_at: Time.zone.parse('2020-11-05')
       ).display_name).to eq '2020-11-01 - 2020-11-05'
@@ -25,7 +25,7 @@ RSpec.describe Stream do
     it 'is open-ended if the stream is the default' do
       # create Stream manually since factory provides display_name value
       expect(described_class.new(
-        organization: organization,
+        organization:,
         created_at: Time.zone.parse('2020-11-01'),
         default: true
       ).display_name).to eq '2020-11-01 - '
@@ -40,7 +40,7 @@ RSpec.describe Stream do
 
     it 'archives uploads' do
       organization = create(:organization)
-      stream_with_upload = create(:stream_with_uploads, organization: organization)
+      stream_with_upload = create(:stream_with_uploads, organization:)
       expect { stream_with_upload.archive }.to change { stream_with_upload.uploads.archived.count }.by(1)
     end
   end
@@ -79,7 +79,7 @@ RSpec.describe Stream do
   end
 
   describe '#make_default' do
-    let!(:current_default) { create(:stream, organization: organization, default: true) }
+    let!(:current_default) { create(:stream, organization:, default: true) }
 
     it 'makes the current stream the only default' do
       expect do

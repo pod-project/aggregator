@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe JobTracker do
   subject(:job_tracker) do
     described_class.new(attributes.merge(job_class: 'whatever',
-                                         job_id: job_id,
-                                         provider_job_id: provider_job_id))
+                                         job_id:,
+                                         provider_job_id:))
   end
 
   let(:attributes) { {} }

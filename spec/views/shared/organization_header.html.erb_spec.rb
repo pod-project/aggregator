@@ -9,9 +9,9 @@ RSpec.describe 'shared/_organization_header' do
            code: 'Bst')
   end
 
-  let(:stream) { create(:stream_with_uploads, organization: organization) }
+  let(:stream) { create(:stream_with_uploads, organization:) }
   let(:user) { create(:user) }
-  let(:contact_email) { create(:contact_email, organization: organization) }
+  let(:contact_email) { create(:contact_email, organization:) }
 
   before do
     assign(:organization, organization)

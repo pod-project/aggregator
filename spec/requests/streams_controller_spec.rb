@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe '/organization/:id/stream' do
   let(:user) { create(:user) }
   let(:organization) { create(:organization) }
-  let(:stream) { create(:stream, organization: organization) }
+  let(:stream) { create(:stream, organization:) }
 
   before do
     sign_in create(:admin)
@@ -67,13 +67,13 @@ RSpec.describe '/organization/:id/stream' do
     let!(:default_stream) { organization.default_stream }
 
     it 'toggles on the default attribute for the new stream' do
-      post make_default_organization_streams_url(organization_id: stream.organization.id, stream: stream, format: :html)
+      post make_default_organization_streams_url(organization_id: stream.organization.id, stream:, format: :html)
       expect(response).to redirect_to(organization_url(stream.organization))
       expect(stream.reload).to have_attributes default: true
     end
 
     it 'toggles off the default stream for the previous default' do
-      post make_default_organization_streams_url(organization_id: stream.organization.id, stream: stream, format: :html)
+      post make_default_organization_streams_url(organization_id: stream.organization.id, stream:, format: :html)
       expect(default_stream.reload).to have_attributes default: false
     end
   end

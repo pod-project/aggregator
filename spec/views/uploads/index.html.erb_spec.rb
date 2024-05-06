@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'uploads/index' do
   let(:organization) { create(:organization) }
-  let(:stream) { create(:stream, organization: organization) }
+  let(:stream) { create(:stream, organization:) }
 
   before do
     assign(:organization, organization)
@@ -13,12 +13,12 @@ RSpec.describe 'uploads/index' do
                      {
                        name: 'One',
                        files: [fixture_file_upload(Rails.root.join('spec/fixtures/1297245.marc'), 'application/octet-stream')],
-                       stream: stream
+                       stream:
                      },
                      {
                        name: 'Two',
                        files: [fixture_file_upload(Rails.root.join('spec/fixtures/1297245.marc'), 'application/octet-stream')],
-                       stream: stream
+                       stream:
                      }
                    ])
     assign(:uploads, stream.uploads.page(params[:page]))

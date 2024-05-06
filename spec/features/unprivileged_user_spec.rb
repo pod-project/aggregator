@@ -9,7 +9,7 @@ RSpec.describe 'Downloading normalzed files from POD' do
   before do
     login_as(user, scope: :user)
 
-    create_list(:upload, 2, :binary_marc, organization: organization, stream: organization.default_stream)
+    create_list(:upload, 2, :binary_marc, organization:, stream: organization.default_stream)
   end
 
   it 'lists organizations' do

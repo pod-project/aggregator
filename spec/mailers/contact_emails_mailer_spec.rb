@@ -6,7 +6,7 @@ RSpec.describe ContactEmailsMailer do
   let(:contact_email) { build(:contact_email) }
 
   describe 'confirm_email' do
-    subject(:mail) { described_class.with(contact_email: contact_email).confirm_email }
+    subject(:mail) { described_class.with(contact_email:).confirm_email }
 
     it 'renders the headers' do
       expect(mail.subject).to eq('Confirm email')

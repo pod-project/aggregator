@@ -19,7 +19,7 @@ class ApplicationJob < ActiveJob::Base
   private
 
   def find_or_initialize_job_tracker
-    JobTracker.find_or_create_by(job_id: job_id) do |tracker|
+    JobTracker.find_or_create_by(job_id:) do |tracker|
       tracker.job_class = self.class.name
       tracker.provider_job_id = provider_job_id
       update_job_tracker_properties(tracker)
@@ -31,6 +31,6 @@ class ApplicationJob < ActiveJob::Base
   end
 
   def cleanup_job_tracker
-    JobTracker.where(job_id: job_id).delete_all
+    JobTracker.where(job_id:).delete_all
   end
 end

@@ -63,7 +63,7 @@ namespace :agg do
           puts "Uploading file #{file['filename']} (#{file['download_url']})"
           uri = URI.parse(file['download_url'])
           io = uri.open('Authorization' => "Bearer #{Settings.marc_fixture_seeds.token}")
-          upload.files.attach(io: io, filename: file['filename'])
+          upload.files.attach(io:, filename: file['filename'])
 
           upload_file_count += 1
           break if upload_file_count >= Settings.marc_fixture_seeds.file_count

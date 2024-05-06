@@ -6,7 +6,7 @@ RSpec.describe 'shared/_layout_stream_page' do
   let(:organization) do
     create(:organization, name: 'Best University')
   end
-  let(:stream) { create(:stream_with_uploads, organization: organization, default: true) }
+  let(:stream) { create(:stream_with_uploads, organization:, default: true) }
   let(:user) { create(:user) }
 
   before do

@@ -8,10 +8,10 @@ class MarcAnalyzer < ActiveStorage::Analyzer
   end
 
   def metadata
-    metadata = { analyzer: self.class.to_s, count: count, type: type }
+    metadata = { analyzer: self.class.to_s, count:, type: }
     return metadata.merge(valid: false, error: 'No MARC records found') if count.zero?
 
-    MarcProfilingJob.perform_later(blob, count: count)
+    MarcProfilingJob.perform_later(blob, count:)
 
     metadata
   rescue MARC::XMLParseError, MARC::Exception => e

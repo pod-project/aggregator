@@ -13,7 +13,7 @@ xml.sitemapindex(
            resourcesync_capabilitylist_url
          end
 
-  xml.tag!('rs:ln', rel: 'up', href: href)
+  xml.tag!('rs:ln', rel: 'up', href:)
   xml.tag!('rs:md', capability: 'resourcelist', at: Time.zone.now.iso8601)
   @organizations.each do |org|
     xml.sitemap do

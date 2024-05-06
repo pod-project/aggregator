@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'organizations/organization_details' do
   let(:organization) { create(:organization, name: 'Best University') }
-  let(:contact_email) { create(:contact_email, organization: organization) }
+  let(:contact_email) { create(:contact_email, organization:) }
 
   before do
     assign(:organization, organization)

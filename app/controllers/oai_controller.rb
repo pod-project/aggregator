@@ -15,7 +15,7 @@ class OaiController < ApplicationController
     raise OaiConcern::BadVerb
   end
 
-  def method_missing(method, *_args, &_block)
+  def method_missing(method, *_args, &)
     raise OaiConcern::BadVerb if method.to_s.start_with?('render_')
 
     super
@@ -265,7 +265,7 @@ class OaiController < ApplicationController
   def build_error_response(code, message, params = {})
     Nokogiri::XML::Builder.new do |xml|
       build_oai_response xml, params do
-        xml.error(code: code) do
+        xml.error(code:) do
           xml.text message
         end
       end
