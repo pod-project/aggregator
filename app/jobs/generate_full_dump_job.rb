@@ -42,6 +42,8 @@ class GenerateFullDumpJob < ApplicationJob
           # In a full dump, we can omit the deletes
           next if record.status == 'delete'
 
+          # Rails.logger.error("Processed record #{record.id} # #{record.marc001}")
+          puts "Processed record #{record.id} # #{record.marc001}"
           writer.write_marc_record(record)
           oai_writer.write_marc_record(record, now)
         end

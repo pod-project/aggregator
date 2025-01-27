@@ -32,6 +32,6 @@ every 3.months do
   runner 'CleanupAndRemoveDataJob.enqueue_all'
 end
 
-every :day do
-  runner 'GenerateDeltaDumpJob.enqueue_all'
-end
+# every :day do
+#   runner 'GenerateDeltaDumpJob.enqueue_all'
+# end
