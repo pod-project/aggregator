@@ -16,7 +16,7 @@ class NormalizedMarcRecordReader
 
   # @yield [MarcRecord]
   def each(...)
-    pool = Concurrent::FixedThreadPool.new(thread_pool_size)
+    # pool = Concurrent::FixedThreadPool.new(thread_pool_size)
 
     current_marc_record_ids.each_slice(200) do |slice|
       records = MarcRecord.find(slice)
@@ -25,7 +25,8 @@ class NormalizedMarcRecordReader
       # this is done in a thread pool for a marginal performance boost
       # (10-15%).
       records.each do |record|
-        pool.post { record.augmented_marc }
+        # pool.post { record.augmented_marc }
+        record.augmented_marc
       rescue StandardError
         nil
       end
