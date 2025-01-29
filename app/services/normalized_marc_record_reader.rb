@@ -16,26 +16,31 @@ class NormalizedMarcRecordReader
 
   # @yield [MarcRecord]
   def each(...)
-    # pool = Concurrent::FixedThreadPool.new(thread_pool_size)
+    pool = Concurrent::FixedThreadPool.new(thread_pool_size)
 
-    current_marc_record_ids.each_slice(200) do |slice|
+    record_ids.each_slice(200) do |slice|
       records = MarcRecord.find(slice)
 
       # do a little pre-processing to pre-generated the augmented MARC.
       # this is done in a thread pool for a marginal performance boost
       # (10-15%).
-      # records.each do |record|
-      #   # pool.post { record.augmented_marc }
-      #   record.augmented_marc
-      # rescue StandardError
-      #   nil
-      # end
+      records.each do |record|
+        pool.post { record.augmented_marc }
+      rescue StandardError
+        nil
+      end
 
       records.each(...)
     end
 
     pool.shutdown
   end
+
+  def record_ids
+    @record_ids ||= current_marc_record_ids
+  end
+
+  private
 
   # Return the full list of MarcRecord id values to include in the dump.
   # Note: ideally we'd be able to iterate through that list, but e.g. #find_each
@@ -54,8 +59,6 @@ class NormalizedMarcRecordReader
 
     hash.values
   end
-
-  private
 
   def using_postgres?
     defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) &&
