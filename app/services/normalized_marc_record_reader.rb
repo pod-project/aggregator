@@ -24,12 +24,12 @@ class NormalizedMarcRecordReader
       # do a little pre-processing to pre-generated the augmented MARC.
       # this is done in a thread pool for a marginal performance boost
       # (10-15%).
-      records.each do |record|
-        # pool.post { record.augmented_marc }
-        record.augmented_marc
-      rescue StandardError
-        nil
-      end
+      # records.each do |record|
+      #   # pool.post { record.augmented_marc }
+      #   record.augmented_marc
+      # rescue StandardError
+      #   nil
+      # end
 
       records.each(...)
     end
